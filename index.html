@@ -1,0 +1,398 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chabokan S3 Manager</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body data-theme="light">
+    <!-- Connection Page -->
+    <div id="connection-page" class="page active">
+        <div class="connection-container">
+            <div class="logo-section">
+                <div class="logo">
+                    <svg width="60" height="60" viewBox="0 0 60 60" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <rect width="60" height="60" rx="12" fill="url(#gradient)"/>
+                        <path d="M30 15L45 25V40L30 50L15 40V25L30 15Z" fill="white" opacity="0.9"/>
+                        <path d="M30 25L40 31V41L30 47L20 41V31L30 25Z" fill="#0066FF" opacity="0.3"/>
+                        <defs>
+                            <linearGradient id="gradient" x1="0" y1="0" x2="60" y2="60">
+                                <stop offset="0%" style="stop-color:#0066FF"/>
+                                <stop offset="100%" style="stop-color:#0099FF"/>
+                            </linearGradient>
+                        </defs>
+                    </svg>
+                </div>
+                <h1 data-i18n="appTitle">Chabokan S3 Manager</h1>
+                <p class="subtitle" data-i18n="appSubtitle">Professional S3 Storage Management</p>
+            </div>
+            
+            <div class="app-controls">
+                <select id="language-select" class="control-select">
+                    <option value="en">English</option>
+                    <option value="fa">فارسی</option>
+                </select>
+                <button id="theme-toggle" class="control-btn">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
+                        <circle cx="12" cy="12" r="5" stroke="currentColor" stroke-width="2"/>
+                        <path d="M12 1v2m0 18v2M23 12h-2M3 12H1m17.66-7.66l-1.42 1.42M6.76 17.24l-1.42 1.42m0-12.72l1.42 1.42m10.08 10.08l1.42 1.42" stroke="currentColor" stroke-width="2"/>
+                    </svg>
+                </button>
+            </div>
+
+            <form id="connection-form" class="connection-form">
+                <div class="form-group">
+                    <label for="endpoint" data-i18n="endpointLabel">Endpoint URL</label>
+                    <input type="text" id="endpoint" data-i18n-placeholder="endpointPlaceholder" placeholder="s3.example.com or https://s3.example.com" required>
+                    <small data-i18n="endpointHelp">Enter your S3-compatible service endpoint</small>
+                </div>
+
+                <div class="form-group">
+                    <label for="accessKey">Access Key</label>
+                    <input type="text" id="accessKey" placeholder="Access Key ID" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="secretKey">Secret Key</label>
+                    <input type="password" id="secretKey" placeholder="Secret Access Key" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="region">Region (Optional)</label>
+                    <input type="text" id="region" placeholder="us-east-1" value="us-east-1">
+                </div>
+
+                <button type="submit" class="btn-primary" id="connect-btn">
+                    <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
+                        <path d="M10 2L18 7V13L10 18L2 13V7L10 2Z" stroke="currentColor" stroke-width="2"/>
+                    </svg>
+                    Connect to Storage
+                </button>
+            </form>
+
+            <div id="connection-history" class="connection-history" style="display: none;">
+                <h3 data-i18n="recentConnections">Recent Connections</h3>
+                <div id="history-list" class="history-list"></div>
+            </div>
+
+            <div id="connection-error" class="error-message" style="display: none;"></div>
+        </div>
+    </div>
+
+    <!-- Bucket List Page -->
+    <div id="bucket-page" class="page">
+        <div class="bucket-container">
+            <header class="app-header">
+                <div class="header-left">
+                    <div class="logo-small">
+                        <svg width="32" height="32" viewBox="0 0 60 60">
+                            <rect width="60" height="60" rx="8" fill="url(#gradient3)"/>
+                            <path d="M30 15L45 25V40L30 50L15 40V25L30 15Z" fill="white" opacity="0.9"/>
+                            <defs>
+                                <linearGradient id="gradient3" x1="0" y1="0" x2="60" y2="60">
+                                    <stop offset="0%" style="stop-color:#0066FF"/>
+                                    <stop offset="100%" style="stop-color:#0099FF"/>
+                                </linearGradient>
+                            </defs>
+                        </svg>
+                    </div>
+                    <div class="header-info">
+                        <h2>Chabokan S3 Manager</h2>
+                        <p id="storage-endpoint"></p>
+                    </div>
+                </div>
+                <div class="header-controls">
+                    <select id="language-select-buckets" class="control-select-small">
+                        <option value="en">English</option>
+                        <option value="fa">فارسی</option>
+                    </select>
+                    <button id="theme-toggle-buckets" class="control-btn-small">
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none">
+                            <circle cx="12" cy="12" r="5" stroke="currentColor" stroke-width="2"/>
+                            <path d="M12 1v2m0 18v2M23 12h-2M3 12H1m17.66-7.66l-1.42 1.42M6.76 17.24l-1.42 1.42m0-12.72l1.42 1.42m10.08 10.08l1.42 1.42" stroke="currentColor" stroke-width="2"/>
+                        </svg>
+                    </button>
+                    <button id="disconnect-btn-buckets" class="btn-secondary">
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none">
+                            <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4M16 17l5-5-5-5M21 12H9" stroke="currentColor" stroke-width="2"/>
+                        </svg>
+                        <span data-i18n="disconnect">Disconnect</span>
+                    </button>
+                </div>
+            </header>
+
+            <div class="bucket-list-container">
+                <div class="bucket-list-header">
+                    <div class="list-title">
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+                            <path d="M20 7H4M14 2l-2 5M10 7l-2 5M18 7l-2 5M6 7l-2 5" stroke="currentColor" stroke-width="2"/>
+                            <rect x="2" y="9" width="20" height="13" rx="2" stroke="currentColor" stroke-width="2"/>
+                        </svg>
+                        <span data-i18n="buckets">Buckets</span>
+                    </div>
+                    <button id="create-bucket-btn" class="btn-primary">
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none">
+                            <path d="M12 5v14M5 12h14" stroke="currentColor" stroke-width="2"/>
+                        </svg>
+                        <span data-i18n="createBucket">Create Bucket</span>
+                    </button>
+                </div>
+                
+                <div class="search-container">
+                    <input type="text" id="bucket-search" class="search-input" data-i18n-placeholder="searchBuckets" placeholder="Search buckets...">
+                </div>
+
+                <div id="bucket-loading" class="loading" style="display: none;">
+                    <div class="spinner"></div>
+                    <p data-i18n="loadingBuckets">Loading buckets...</p>
+                </div>
+
+                <div id="bucket-list" class="bucket-list">
+                    <!-- Buckets will be inserted here -->
+                </div>
+
+                <div id="bucket-empty-state" class="empty-state" style="display: none;">
+                    <svg width="80" height="80" viewBox="0 0 24 24" fill="none">
+                        <path d="M20 7H4M14 2l-2 5M10 7l-2 5M18 7l-2 5M6 7l-2 5" stroke="currentColor" stroke-width="1.5"/>
+                        <rect x="2" y="9" width="20" height="13" rx="2" stroke="currentColor" stroke-width="1.5"/>
+                    </svg>
+                    <h3 data-i18n="noBucketsFound">No Buckets Found</h3>
+                    <p data-i18n="noBucketsMessage">Create a new bucket to get started</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- File Manager Page -->
+    <div id="manager-page" class="page">
+        <div class="manager-container">
+            <!-- Header -->
+            <header class="app-header">
+                <div class="header-left">
+                    <div class="logo-small">
+                        <svg width="32" height="32" viewBox="0 0 60 60">
+                            <rect width="60" height="60" rx="8" fill="url(#gradient2)"/>
+                            <path d="M30 15L45 25V40L30 50L15 40V25L30 15Z" fill="white" opacity="0.9"/>
+                            <defs>
+                                <linearGradient id="gradient2" x1="0" y1="0" x2="60" y2="60">
+                                    <stop offset="0%" style="stop-color:#0066FF"/>
+                                    <stop offset="100%" style="stop-color:#0099FF"/>
+                                </linearGradient>
+                            </defs>
+                        </svg>
+                    </div>
+                    <div class="header-info">
+                        <h2>Chabokan S3 Manager</h2>
+                        <p id="bucket-name"></p>
+                    </div>
+                </div>
+                <div class="header-actions">
+                    <button id="back-to-buckets-btn" class="btn-secondary">
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none">
+                            <path d="M19 12H5M12 19l-7-7 7-7" stroke="currentColor" stroke-width="2"/>
+                        </svg>
+                        <span data-i18n="backToBuckets">Back to Buckets</span>
+                    </button>
+                    <div class="header-controls">
+                        <select id="language-select-manager" class="control-select-small">
+                            <option value="en">English</option>
+                            <option value="fa">فارسی</option>
+                        </select>
+                        <button id="theme-toggle-manager" class="control-btn-small">
+                            <svg width="18" height="18" viewBox="0 0 24 24" fill="none">
+                                <circle cx="12" cy="12" r="5" stroke="currentColor" stroke-width="2"/>
+                                <path d="M12 1v2m0 18v2M23 12h-2M3 12H1m17.66-7.66l-1.42 1.42M6.76 17.24l-1.42 1.42m0-12.72l1.42 1.42m10.08 10.08l1.42 1.42" stroke="currentColor" stroke-width="2"/>
+                            </svg>
+                        </button>
+                        <button id="disconnect-btn" class="btn-secondary">
+                            <svg width="18" height="18" viewBox="0 0 24 24" fill="none">
+                                <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4M16 17l5-5-5-5M21 12H9" stroke="currentColor" stroke-width="2"/>
+                            </svg>
+                            <span data-i18n="disconnect">Disconnect</span>
+                        </button>
+                    </div>
+                </div>
+            </header>
+
+            <!-- Breadcrumb -->
+            <div class="breadcrumb-container">
+                <div class="breadcrumb" id="breadcrumb">
+                    <span class="breadcrumb-item active" data-path="">
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none">
+                            <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z" stroke="currentColor" stroke-width="2"/>
+                        </svg>
+                        Home
+                    </span>
+                </div>
+            </div>
+
+            <!-- File List -->
+            <div class="file-list-container">
+                <div class="file-list-header">
+                    <div class="list-title">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
+                            <path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z" stroke="currentColor" stroke-width="2"/>
+                        </svg>
+                        <span data-i18n="filesAndFolders">Files & Folders</span>
+                    </div>
+                    <div class="file-list-actions">
+                        <div id="items-count" class="items-count"></div>
+                        <button id="delete-selected-btn" class="btn-secondary btn-small" style="display: none;">
+                            <svg width="18" height="18" viewBox="0 0 24 24" fill="none">
+                                <path d="M3 6h18M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2m3 0v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6h14z" stroke="currentColor" stroke-width="2"/>
+                            </svg>
+                            <span data-i18n="deleteSelected">Delete Selected</span>
+                        </button>
+                        <button id="create-folder-btn" class="btn-secondary btn-small">
+                            <svg width="18" height="18" viewBox="0 0 24 24" fill="none">
+                                <path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z" stroke="currentColor" stroke-width="2"/>
+                                <path d="M12 11v6M9 14h6" stroke="currentColor" stroke-width="2"/>
+                            </svg>
+                            <span data-i18n="createFolder">New Folder</span>
+                        </button>
+                        <button id="upload-file-btn" class="btn-primary btn-small">
+                            <svg width="18" height="18" viewBox="0 0 24 24" fill="none">
+                                <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4M17 8l-5-5-5 5M12 3v12" stroke="currentColor" stroke-width="2"/>
+                            </svg>
+                            <span data-i18n="uploadFile">Upload File</span>
+                        </button>
+                    </div>
+                </div>
+                
+                <div class="search-container">
+                    <input type="text" id="file-search" class="search-input" data-i18n-placeholder="searchFiles" placeholder="Search files and folders...">
+                </div>
+
+                <div id="loading" class="loading" style="display: none;">
+                    <div class="spinner"></div>
+                    <p data-i18n="loading">Loading...</p>
+                </div>
+
+                <div id="file-list" class="file-list">
+                    <!-- Files will be inserted here -->
+                </div>
+
+                <div id="empty-state" class="empty-state" style="display: none;">
+                    <svg width="80" height="80" viewBox="0 0 24 24" fill="none">
+                        <path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z" stroke="currentColor" stroke-width="1.5"/>
+                    </svg>
+                    <h3 data-i18n="folderEmpty">Folder is Empty</h3>
+                    <p data-i18n="noFilesMessage">No files or folders here</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Share Link Modal -->
+    <div id="share-modal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 data-i18n="shareLink">Share Link</h3>
+                <button class="modal-close" onclick="closeShareModal()">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+                        <path d="M18 6L6 18M6 6l12 12" stroke="currentColor" stroke-width="2"/>
+                    </svg>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="form-group">
+                    <label data-i18n="linkExpiry">Link Expiry</label>
+                    <div class="expiry-buttons">
+                        <button type="button" class="btn-expiry" onclick="setExpiry(86400)" data-expiry="86400">1 Day</button>
+                        <button type="button" class="btn-expiry" onclick="setExpiry(172800)" data-expiry="172800">2 Days</button>
+                        <button type="button" class="btn-expiry active" onclick="setExpiry(604800)" data-expiry="604800">7 Days</button>
+                    </div>
+                </div>
+                <div class="link-input-group">
+                    <input type="text" id="share-link-input" readonly>
+                    <button class="btn-copy" onclick="copyShareLink()">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
+                            <rect x="9" y="9" width="13" height="13" rx="2" stroke="currentColor" stroke-width="2"/>
+                            <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1" stroke="currentColor" stroke-width="2"/>
+                        </svg>
+                        <span data-i18n="copy">Copy</span>
+                    </button>
+                </div>
+                <div id="copy-success" class="copy-success" style="display: none;">
+                    <span data-i18n="linkCopied">✓ Link copied</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Create Bucket Modal -->
+    <div id="create-bucket-modal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>Create New Bucket</h3>
+                <button class="modal-close" onclick="closeCreateBucketModal()">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+                        <path d="M18 6L6 18M6 6l12 12" stroke="currentColor" stroke-width="2"/>
+                    </svg>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form id="create-bucket-form">
+                    <div class="form-group">
+                        <label for="new-bucket-name">Bucket Name</label>
+                        <input type="text" id="new-bucket-name" placeholder="my-new-bucket" required>
+                        <small>Only lowercase letters, numbers, and hyphens (-) allowed</small>
+                    </div>
+                    <div class="form-group">
+                        <label class="checkbox-label">
+                            <input type="checkbox" id="bucket-public">
+                            <span>Public Access</span>
+                        </label>
+                        <small>Files will be accessible without authentication</small>
+                    </div>
+                    <div class="modal-actions">
+                        <button type="button" class="btn-secondary" onclick="closeCreateBucketModal()">Cancel</button>
+                        <button type="submit" class="btn-primary" data-i18n="create">Create Bucket</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Upload File Modal -->
+    <div id="upload-modal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 data-i18n="uploadFileTitle">Upload File</h3>
+                <button class="modal-close" onclick="closeUploadModal()">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+                        <path d="M18 6L6 18M6 6l12 12" stroke="currentColor" stroke-width="2"/>
+                    </svg>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form id="upload-form">
+                    <div class="form-group">
+                        <label for="file-input">Select File</label>
+                        <input type="file" id="file-input" required>
+                        <small>Choose a file to upload</small>
+                    </div>
+                    <div id="upload-progress" class="upload-progress" style="display: none;">
+                        <div class="progress-bar">
+                            <div class="progress-fill" id="progress-fill"></div>
+                        </div>
+                        <div class="progress-text" id="progress-text">0%</div>
+                    </div>
+                    <div class="modal-actions">
+                        <button type="button" class="btn-secondary" onclick="closeUploadModal()">Cancel</button>
+                        <button type="submit" class="btn-primary" id="upload-submit-btn">Upload</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Toast Notification -->
+    <div id="toast" class="toast"></div>
+
+    <script src="translations.js"></script>
+    <script src="renderer.js"></script>
+</body>
+</html>
+

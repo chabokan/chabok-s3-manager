@@ -1,0 +1,104 @@
+{
+  "name": "chabokan-s3-manager",
+  "version": "1.0.0",
+  "description": "Chabokan S3 Storage Manager - Modern file manager for S3 compatible storage",
+  "main": "main.js",
+  "homepage": "https://chabokan.net",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/chabokan/s3-manager"
+  },
+  "author": {
+    "name": "Chabokan",
+    "email": "support@chabokan.net",
+    "url": "https://chabokan.net"
+  },
+  "scripts": {
+    "start": "electron .",
+    "dev": "electron . --dev",
+    "build": "electron-builder",
+    "build:win": "electron-builder --win",
+    "build:mac": "electron-builder --mac",
+    "build:linux": "electron-builder --linux",
+    "dist": "electron-builder --win --linux --mac"
+  },
+  "keywords": [
+    "electron",
+    "s3",
+    "file-manager",
+    "chabokan"
+  ],
+  "license": "MIT",
+  "build": {
+    "appId": "com.chabokan.s3manager",
+    "productName": "Chabokan S3 Manager",
+    "copyright": "Copyright © 2025 Chabokan",
+    "directories": {
+      "output": "dist",
+      "buildResources": "build"
+    },
+    "files": [
+      "main.js",
+      "preload.js",
+      "renderer.js",
+      "index.html",
+      "styles.css",
+      "package.json"
+    ],
+    "win": {
+      "target": [
+        {
+          "target": "nsis",
+          "arch": ["x64"]
+        },
+        {
+          "target": "portable",
+          "arch": ["x64"]
+        }
+      ],
+      "icon": "build/icon.png"
+    },
+    "mac": {
+      "target": ["dmg", "zip"],
+      "icon": "build/icon.png",
+      "category": "public.app-category.utilities"
+    },
+    "linux": {
+      "target": [
+        {
+          "target": "AppImage",
+          "arch": ["x64"]
+        },
+        {
+          "target": "deb",
+          "arch": ["x64"]
+        }
+      ],
+      "icon": "build/icon.png",
+      "category": "Utility",
+      "maintainer": "Chabokan <support@chabokan.net>"
+    },
+    "nsis": {
+      "oneClick": false,
+      "allowToChangeInstallationDirectory": true,
+      "createDesktopShortcut": true,
+      "createStartMenuShortcut": true,
+      "shortcutName": "Chabokan S3 Manager",
+      "installerIcon": "build/icon.png",
+      "uninstallerIcon": "build/icon.png",
+      "installerHeaderIcon": "build/icon.png"
+    },
+    "deb": {
+      "depends": ["gconf2", "gconf-service", "libnotify4", "libappindicator1", "libxtst6", "libnss3"],
+      "maintainer": "Chabokan <support@chabokan.net>"
+    }
+  },
+  "devDependencies": {
+    "electron": "^27.0.0",
+    "electron-builder": "^26.0.12"
+  },
+  "dependencies": {
+    "@aws-sdk/client-s3": "^3.438.0",
+    "@aws-sdk/s3-request-presigner": "^3.438.0"
+  }
+}
