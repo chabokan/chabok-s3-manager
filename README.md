@@ -45,7 +45,7 @@
 ### نصب
 ```bash
 # کلون کردن پروژه
-git clone https://github.com/chabokan/s3-manager.git
+git clone https://github.com/chabokan/chabok-s3-manager.git
 cd s3-manager
 
 # نصب وابستگی‌ها
@@ -144,11 +144,9 @@ npm run clean
 
 ## 📝 مجوز
 
-این پروژه تحت مجوز MIT منتشر شده است. برای جزئیات بیشتر فایل [LICENSE](LICENSE) را مطالعه کنید.
+این پروژه تحت مجوز MIT منتشر شده است.
 
 ## 🤝 مشارکت
-
-مشارکت‌های شما خوشامد است! لطفاً:
 
 1. پروژه را Fork کنید
 2. شاخه جدیدی ایجاد کنید (`git checkout -b feature/amazing-feature`)
@@ -160,7 +158,7 @@ npm run clean
 
 - **وب‌سایت**: [chabokan.net](https://chabokan.net)
 - **ایمیل**: support@chabokan.net
-- **گیت‌هاب**: [Issues](https://github.com/chabokan/s3-manager/issues)
+- **گیت‌هاب**: [Issues](https://github.com/chabokan/chabok-s3-manager/issues)
 
 ## 🙏 تشکر
 

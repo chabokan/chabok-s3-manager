@@ -6,7 +6,7 @@
   "homepage": "https://chabokan.net",
   "repository": {
     "type": "git",
-    "url": "https://github.com/chabokan/s3-manager"
+    "url": "https://github.com/chabokan/chabok-s3-manager"
   },
   "author": {
     "name": "Chabokan",
