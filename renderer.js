@@ -41,11 +41,16 @@ const uploadForm = document.getElementById('upload-form');
 const connectionHistory = document.getElementById('connection-history');
 const historyList = document.getElementById('history-list');
 
-// Initialize
-loadConnectionHistory();
-initTheme();
-initLanguage();
-setupEventListeners();
+// Initialize - wait for DOM and translations to be ready
+document.addEventListener('DOMContentLoaded', () => {
+    // Wait a bit for translations to be loaded
+    setTimeout(() => {
+        loadConnectionHistory();
+        initTheme();
+        initLanguage();
+        setupEventListeners();
+    }, 100);
+});
 
 // Connection Form Handler
 connectionForm.addEventListener('submit', async (e) => {
@@ -1026,6 +1031,13 @@ function changeLanguage(lang) {
 // Update Text Content
 function updateTextContent(lang) {
     console.log('Updating text content for language:', lang);
+    
+    // Check if translations object exists
+    if (typeof translations === 'undefined') {
+        console.warn('Translations object not available yet, retrying...');
+        setTimeout(() => updateTextContent(lang), 100);
+        return;
+    }
     
     // Get all elements with data-i18n attribute
     const elements = document.querySelectorAll('[data-i18n]');

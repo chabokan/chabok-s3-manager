@@ -43,7 +43,9 @@
       "renderer.js",
       "index.html",
       "styles.css",
-      "package.json"
+      "translations.js",
+      "package.json",
+      "build/**/*"
     ],
     "win": {
       "target": [
@@ -56,12 +58,17 @@
           "arch": ["x64"]
         }
       ],
-      "icon": "build/icon.png"
+      "icon": "build/icon.png",
+      "requestedExecutionLevel": "asInvoker"
     },
     "mac": {
       "target": ["dmg", "zip"],
       "icon": "build/icon.png",
-      "category": "public.app-category.utilities"
+      "category": "public.app-category.utilities",
+      "hardenedRuntime": true,
+      "gatekeeperAssess": false,
+      "entitlements": "build/entitlements.mac.plist",
+      "entitlementsInherit": "build/entitlements.mac.plist"
     },
     "linux": {
       "target": [
@@ -76,21 +83,42 @@
       ],
       "icon": "build/icon.png",
       "category": "Utility",
-      "maintainer": "Chabokan <support@chabokan.net>"
+      "maintainer": "Chabokan <support@chabokan.net>",
+      "desktop": {
+        "entry": {
+          "Name": "Chabokan S3 Manager",
+          "Comment": "Professional S3 Storage Management",
+          "Keywords": "s3;storage;file-manager;cloud;",
+          "StartupWMClass": "chabokan-s3-manager"
+        }
+      }
     },
     "nsis": {
       "oneClick": false,
       "allowToChangeInstallationDirectory": true,
       "createDesktopShortcut": true,
       "createStartMenuShortcut": true,
-      "shortcutName": "Chabokan S3 Manager",
-      "installerIcon": "build/icon.png",
-      "uninstallerIcon": "build/icon.png",
-      "installerHeaderIcon": "build/icon.png"
+      "shortcutName": "Chabokan S3 Manager"
     },
     "deb": {
-      "depends": ["gconf2", "gconf-service", "libnotify4", "libappindicator1", "libxtst6", "libnss3"],
-      "maintainer": "Chabokan <support@chabokan.net>"
+      "depends": [
+        "libgtk-3-0",
+        "libnotify4",
+        "libnss3",
+        "libxss1",
+        "libxtst6",
+        "xdg-utils",
+        "libatspi2.0-0",
+        "libdrm2",
+        "libxcomposite1",
+        "libxdamage1",
+        "libxrandr2",
+        "libgbm1",
+        "libxkbcommon0",
+        "libasound2"
+      ],
+      "maintainer": "Chabokan <support@chabokan.net>",
+      "priority": "optional"
     }
   },
   "devDependencies": {

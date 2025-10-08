@@ -55,6 +55,30 @@ npm install
 npm start
 ```
 
+### نصب نسخه آماده / Install Pre-built Version
+
+#### Windows
+1. دانلود فایل `Chabokan S3 Manager Setup 1.0.0.exe`
+2. اجرای فایل نصب و دنبال کردن مراحل
+3. برنامه از منوی Start قابل دسترسی است
+
+#### macOS
+1. دانلود فایل `Chabokan S3 Manager-1.0.0-arm64.dmg`
+2. باز کردن فایل DMG و کشیدن برنامه به پوشه Applications
+3. اجرای برنامه از Launchpad یا Applications
+
+#### Linux
+```bash
+# نصب با dpkg
+sudo dpkg -i chabokan-s3-manager_1.0.0_amd64.deb
+
+# یا نصب با apt
+sudo apt install ./chabokan-s3-manager_1.0.0_amd64.deb
+
+# اجرای AppImage (بدون نصب)
+./Chabokan\ S3\ Manager-1.0.0.AppImage
+```
+
 ## 🛠️ ساخت نسخه نصب
 
 ### Windows (EXE)
